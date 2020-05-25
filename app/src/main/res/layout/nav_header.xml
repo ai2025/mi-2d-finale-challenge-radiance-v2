@@ -15,7 +15,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:background="@drawable/cover">
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="35dp"
-            android:text="FireNotes"
+            android:text="SNApp"
             android:textColor="#fff"
             android:textSize="14pt"
             android:textStyle="bold"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
             android:text="Take Your Notebook with You"
             android:textColor="#fff"
             android:textSize="10pt"
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="13dp"
             android:layout_marginRight="25dp"
             android:background="#B3ffffff"
             app:layout_constraintStart_toStartOf="parent"

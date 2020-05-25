@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         titles.add("Sec title");
         content.add("Sec Note Content sample Sec Note Content sample Sec Note Content sample" +
-                "Sec Note Content sample Sec Note Content sample Sec Note Content sample");
+                " Sec Note Content sample Sec Note Content sample Sec Note Content sample");
 
         titles.add("Third title");
         content.add("Third Note Content sample");

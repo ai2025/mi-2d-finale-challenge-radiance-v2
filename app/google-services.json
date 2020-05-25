@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "548554623970",
+    "firebase_url": "https://snapp-279e6.firebaseio.com",
+    "project_id": "snapp-279e6",
+    "storage_bucket": "snapp-279e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548554623970:android:5194558e7b2f690240c7bb",
+        "android_client_info": {
+          "package_name": "id.ac.polinema.snapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548554623970-ep2aju6u9l1vhl6urp5ske2hftrrc7ts.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.ac.polinema.snapp",
+            "certificate_hash": "d48e6777b1b84fd9ec6ebde5496a2c64bfd06a20"
+          }
+        },
+        {
+          "client_id": "548554623970-6c7fa5p0nbj9aejs0cfdhiov1v7no1vp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCReIJ9AiWFESeSYCINOZHO-K4tGj8YbjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548554623970-6c7fa5p0nbj9aejs0cfdhiov1v7no1vp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,2 @@
+rootProject.name='SNApp'
+include ':app'

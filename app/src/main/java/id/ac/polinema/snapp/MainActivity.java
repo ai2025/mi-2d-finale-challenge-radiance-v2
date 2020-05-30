@@ -54,7 +54,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Query query = fStore.collection("notes").orderBy("title", Query.Direction.DESCENDING);
 
-        FirestoreRecyclerOptions<Note> allNotes = new FirestoreRecyclerOptions.Builder<Note>().setQuery(query, Note.class).build();
+        FirestoreRecyclerOptions<Note> allNotes = new FirestoreRecyclerOptions.Builder<Note>()
+                .setQuery(query, Note.class)
+                .build();
 
         noteAdapter = new FirestoreRecyclerAdapter<Note, NoteViewHolder>(allNotes) {
             @Override

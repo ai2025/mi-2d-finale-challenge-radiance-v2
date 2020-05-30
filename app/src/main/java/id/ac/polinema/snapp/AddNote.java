@@ -1,5 +1,6 @@
 package id.ac.polinema.snapp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -25,7 +27,7 @@ import java.util.Map;
 public class AddNote extends AppCompatActivity {
     FirebaseFirestore fStore;
     EditText noteTitle, noteContent;
-    ProgressBar progressBarSave;
+    ProgressBar progSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,46 +35,98 @@ public class AddNote extends AppCompatActivity {
         setContentView(R.layout.activity_add_note);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fStore = FirebaseFirestore.getInstance();
-        noteTitle = findViewById(R.id.addNoteTitle);
         noteContent = findViewById(R.id.addNoteContent);
-        progressBarSave = findViewById(R.id.progressBar);
+        noteTitle = findViewById(R.id.addNoteTitle);
+        progSave = findViewById(R.id.progressBar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Toast.makeText(AddNote.this, "Save Clicked", Toast.LENGTH_SHORT).show();
                 String nTitle = noteTitle.getText().toString();
                 String nContent = noteContent.getText().toString();
 
                 if (nTitle.isEmpty() || nContent.isEmpty()) {
-                    Toast.makeText(AddNote.this, "Can not save note with empty field", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddNote.this, "Can't save! Don't save your emptiness here", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                progressBarSave.setVisibility(View.VISIBLE);
+
+                progSave.setVisibility(View.VISIBLE);
 
                 // save note
                 DocumentReference docref = fStore.collection("notes").document();
                 Map<String, Object> note = new HashMap<>();
                 note.put("title", nTitle);
                 note.put("content", nContent);
+
                 docref.set(note).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        progSave.setVisibility(View.INVISIBLE);
                         Toast.makeText(AddNote.this, "Note Added", Toast.LENGTH_SHORT).show();
                         onBackPressed();
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddNote.this, "Error, Please try again!", Toast.LENGTH_SHORT).show();
-                        progressBarSave.setVisibility(View.VISIBLE);
+                        progSave.setVisibility(View.INVISIBLE);
+                        Toast.makeText(AddNote.this, "FAILED", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         });
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.close) {
+            showConfirmDialog();
+//            onBackPressed();
+        }
+//        if (item.getItemId() == R.id.close){
+//
+//        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showConfirmDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set title dialog
+        alertDialogBuilder.setTitle("You want to discard this?");
+
+        // set pesan dari dialog
+        alertDialogBuilder
+                .setMessage("Click Yes to discard!")
+                .setIcon(R.mipmap.ic_launcher)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // jika tombol diklik, maka akan menutup activity ini
+                        Toast.makeText(AddNote.this, "Note DISCARDED", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // jika tombol ini diklik, akan menutup dialog
+                        // dan tidak terjadi apa2
+                        dialog.cancel();
+                    }
+                });
+
+        // membuat alert dialog dari builder
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // menampilkan alert dialog
+        alertDialog.show();
     }
 
     @Override
@@ -82,12 +136,4 @@ public class AddNote extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.close) {
-            Toast.makeText(this, "Not Saved", Toast.LENGTH_SHORT).show();
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

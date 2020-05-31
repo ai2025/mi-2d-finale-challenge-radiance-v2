@@ -32,12 +32,13 @@ public class Splash extends AppCompatActivity {
                 // check if user has logged in
                 if (fAuth.getCurrentUser() != null) {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    //   finish();
                 } else {
                     //create new anonymous account / dont need real data
                     fAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            Toast.makeText(Splash.this, "Logged with temporary account", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Splash.this, "Logged in with temporary account", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
                         }

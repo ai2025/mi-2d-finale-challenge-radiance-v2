@@ -1,6 +1,7 @@
 package id.ac.polinema.snapp;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,10 +9,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,8 +26,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -33,6 +40,9 @@ import java.util.Random;
 
 import id.ac.polinema.snapp.model.Adapter;
 import id.ac.polinema.snapp.model.Note;
+import id.ac.polinema.snapp.note.AddNote;
+import id.ac.polinema.snapp.note.EditNote;
+import id.ac.polinema.snapp.note.NoteDetails;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -60,11 +70,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         noteAdapter = new FirestoreRecyclerAdapter<Note, NoteViewHolder>(allNotes) {
             @Override
-            protected void onBindViewHolder(@NonNull NoteViewHolder noteViewHolder, int i, @NonNull final Note note) {
+            protected void onBindViewHolder(@NonNull NoteViewHolder noteViewHolder, final int i, @NonNull final Note note) {
                 noteViewHolder.noteTitle.setText(note.getTitle());
                 noteViewHolder.noteContent.setText(note.getContent());
                 final int code = getRandomColor();
                 noteViewHolder.mCardView.setCardBackgroundColor(noteViewHolder.view.getResources().getColorStateList(code));
+                final String docId = noteAdapter.getSnapshots().getSnapshot(i).getId();
 
                 noteViewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -73,7 +84,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         i.putExtra("title", note.getTitle());
                         i.putExtra("content", note.getContent());
                         i.putExtra("code", code);
+                        i.putExtra("noteId", docId);
                         v.getContext().startActivity(i);
+                    }
+                });
+
+                ImageView menuIcon = noteViewHolder.view.findViewById(R.id.menuIcon);
+                menuIcon.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
+                    @Override
+                    public void onClick(final View v) {
+                        final String docId = noteAdapter.getSnapshots().getSnapshot(i).getId();
+                        PopupMenu menu = new PopupMenu(v.getContext(), v);
+                        //  menu.setGravity(Gravity.END);
+                        menu.getMenu().add("Edit").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                Intent i = new Intent(v.getContext(), EditNote.class);
+                                i.putExtra("title", note.getTitle());
+                                i.putExtra("content", note.getContent());
+                                i.putExtra("noteId", docId);
+                                startActivity(i);
+                                return false;
+                            }
+                        });
+
+                        menu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                DocumentReference docRef = fStore.collection("notes").document(docId);
+                                docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // note deleted
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(MainActivity.this, "Error Deleting Note", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                return false;
+                            }
+                        });
+                        menu.show();
                     }
                 });
 

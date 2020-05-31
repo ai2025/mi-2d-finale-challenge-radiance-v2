@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import id.ac.polinema.snapp.NoteDetails;
 import id.ac.polinema.snapp.R;
+import id.ac.polinema.snapp.note.NoteDetails;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     List<String> titles;

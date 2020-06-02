@@ -2,6 +2,9 @@ package id.ac.polinema.snapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,15 +15,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-//import android.os.Handler;
-//import android.view.View;
-//import android.widget.ProgressBar;
-
 public class Splash extends AppCompatActivity {
 
     FirebaseAuth fAuth;
 
-//    ProgressBar pbar;
+    ProgressBar pbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,38 +27,16 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         fAuth = FirebaseAuth.getInstance();
-//        pbar = findViewById(R.id.progressBar2);
+        pbar = findViewById(R.id.progSplash);
 
 
-        // check if user has logged in
-        if (fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            //   finish();
-        } else {
-            //create new anonymous account / dont need real data
-            fAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    Toast.makeText(Splash.this, "Logged in with temporary account", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                    pbar.setVisibility(View.GONE);
-                    killActivity();
-                    finish();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(Splash.this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
-        }
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
+                doAct();
+                finish();
 //                // check if user has logged in
 //                if (fAuth.getCurrentUser() != null) {
 //                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -83,11 +60,38 @@ public class Splash extends AppCompatActivity {
 //                        }
 //                    });
 //                }
-//            }
-//        }, 1000);
+            }
+        }, 1000);
+//        finish();
     }
 
-    private void killActivity() {
-        finish();
+    private void doAct() {
+        // check if user has logged in
+        if (fAuth.getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            //   finish();
+        } else {
+            //create new anonymous account / dont need real data
+            fAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    Toast.makeText(Splash.this, "Logged in with temporary account", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    pbar.setVisibility(View.GONE);
+//                    killActivity();
+//                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Splash.this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    finish();
+                }
+            });
+        }
     }
+
+//    private void killActivity() {
+//        finish();
+//    }
 }

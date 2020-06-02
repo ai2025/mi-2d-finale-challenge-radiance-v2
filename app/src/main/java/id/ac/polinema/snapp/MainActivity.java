@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         i.putExtra("code", code);
                         i.putExtra("noteId", docId);
                         v.getContext().startActivity(i);
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
                     }
                 });
 
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 i.putExtra("content", note.getContent());
                                 i.putExtra("noteId", docId);
                                 startActivity(i);
+                                overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
                                 return false;
                             }
                         });
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         menu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
-                                DocumentReference docRef = fStore.collection("notes").document(docId);
+                                DocumentReference docRef = fStore.collection("notes").document(user.getUid()).collection("myNotes").document(docId);
                                 docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -186,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(view.getContext(), AddNote.class));
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
             }
         });
     }
@@ -196,11 +199,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.addNote:
                 startActivity(new Intent(this, AddNote.class));
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
                 break;
 
             case R.id.sync:
                 if (user.isAnonymous()) {
                     startActivity(new Intent(this, Register.class));
+                    overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
                 } else {
                     Toast.makeText(this, "You already connected", Toast.LENGTH_SHORT).show();
                 }
@@ -223,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getApplicationContext(), Splash.class));
+            overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
             finish();
         }
     }
@@ -235,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(getApplicationContext(), Register.class));
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
                         finish();
                     }
                 }).setNegativeButton("Logout", new DialogInterface.OnClickListener() {
@@ -244,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onSuccess(Void aVoid) {
                                 startActivity(new Intent(getApplicationContext(), Splash.class));
+                                overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
                                 finish();
                             }
                         });

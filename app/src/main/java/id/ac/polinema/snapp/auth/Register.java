@@ -103,6 +103,8 @@ public class Register extends AppCompatActivity {
                         usr.updateProfile(req);
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+                        finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

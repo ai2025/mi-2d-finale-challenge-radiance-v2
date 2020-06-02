@@ -40,7 +40,7 @@ public class AddNote extends AppCompatActivity {
         setContentView(R.layout.activity_add_note);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fStore = FirebaseFirestore.getInstance();
         noteContent = findViewById(R.id.addNoteContent);
@@ -81,7 +81,7 @@ public class AddNote extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progSave.setVisibility(View.INVISIBLE);
-                        Toast.makeText(AddNote.this, "FAILED", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddNote.this, "FAILED, Please Try Again", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -113,18 +113,19 @@ public class AddNote extends AppCompatActivity {
                 .setMessage("Click Yes to discard!")
                 .setIcon(R.mipmap.ic_launcher)
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // jika tombol diklik, maka akan menutup activity ini
                         Toast.makeText(AddNote.this, "Note DISCARDED", Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     }
                 })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                .setPositiveButton("NO", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // jika tombol ini diklik, akan menutup dialog
                         // dan tidak terjadi apa2
                         dialog.cancel();
+
                     }
                 });
 

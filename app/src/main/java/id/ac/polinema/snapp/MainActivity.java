@@ -169,6 +169,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         noteList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         noteList.setAdapter(noteAdapter);
 
+        View vHeader = nav_view.getHeaderView(0);
+        TextView uname = vHeader.findViewById(R.id.userDisplayName);
+        TextView email = vHeader.findViewById(R.id.userDisplayEmail);
+
+        if (user.isAnonymous()) {
+            uname.setText("ANONYMOUS USER");
+            email.setVisibility(View.INVISIBLE);
+        } else {
+            email.setText(user.getEmail());
+            uname.setText(user.getDisplayName());
+        }
+
         FloatingActionButton fab = findViewById(R.id.addNoteFloat);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,10 +198,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(this, AddNote.class));
                 break;
 
+            case R.id.sync:
+                if (user.isAnonymous()) {
+                    startActivity(new Intent(this, Register.class));
+                } else {
+                    Toast.makeText(this, "You already connected", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
             case R.id.logout:
                 checkUser();
                 break;
-                
+
             default:
                 Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
         }
@@ -220,9 +240,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }).setNegativeButton("Logout", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // ToDO : delete all notes created by the anom user
-
-                        //ToDO: delete the anom user
                         user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

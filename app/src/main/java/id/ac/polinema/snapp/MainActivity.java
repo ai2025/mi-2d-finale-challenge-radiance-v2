@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import id.ac.polinema.snapp.auth.Login;
 import id.ac.polinema.snapp.auth.Register;
 import id.ac.polinema.snapp.model.Adapter;
 import id.ac.polinema.snapp.model.Note;
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer);
         nav_view = findViewById(R.id.nav_view);
         nav_view.setNavigationItemSelectedListener(this);
+        Menu navMenu = nav_view.getMenu();
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -178,9 +180,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (user.isAnonymous()) {
             uname.setText("ANONYMOUS USER");
             email.setVisibility(View.INVISIBLE);
+            navMenu.findItem(R.id.login).setVisible(true);
+            navMenu.findItem(R.id.logout).setVisible(false);
         } else {
             email.setText(user.getEmail());
             uname.setText(user.getDisplayName());
+            navMenu.findItem(R.id.login).setVisible(false);
+            navMenu.findItem(R.id.logout).setVisible(true);
         }
 
         FloatingActionButton fab = findViewById(R.id.addNoteFloat);
@@ -212,7 +218,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.logout:
-                checkUser();
+//                checkUser();
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), Splash.class));
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+                finish();
+                break;
+
+            case R.id.login:
+//                checkUser();
+                displayAlert();
                 break;
 
             default:
@@ -221,40 +236,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    private void checkUser() {
-        // check user data
-        if (user.isAnonymous()) {
-            displayAlert();
-        } else {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), Splash.class));
-            overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
-            finish();
-        }
-    }
+//    private void checkUser() {
+//        // check user data
+//        if (user.isAnonymous()) {
+//            displayAlert();
+//        } else {
+//            FirebaseAuth.getInstance().signOut();
+//            startActivity(new Intent(getApplicationContext(), Splash.class));
+//            overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+//            finish();
+//        }
+//    }
 
     private void displayAlert() {
         AlertDialog.Builder warning = new AlertDialog.Builder(this)
                 .setTitle("Are you sure?")
-                .setMessage("You are logged in with temporary account. Logging out will delete all notes")
-                .setPositiveButton("Sync Note", new DialogInterface.OnClickListener() {
+                .setMessage("You currently in temporary account. Logging in will DELETE all notes. Click register to SAVE your note.")
+                .setPositiveButton("Register", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(getApplicationContext(), Register.class));
                         overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
                         finish();
                     }
-                }).setNegativeButton("Logout", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Login", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                startActivity(new Intent(getApplicationContext(), Splash.class));
+                        startActivity(new Intent(getApplicationContext(), Login.class));
                                 overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
-                                finish();
-                            }
-                        });
+//                        user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                startActivity(new Intent(getApplicationContext(), Splash.class));
+//                                overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+//                                finish();
+//                            }
+//                        });
                     }
                 });
         warning.show();

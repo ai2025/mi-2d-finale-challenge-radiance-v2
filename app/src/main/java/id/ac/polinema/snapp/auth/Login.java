@@ -3,6 +3,7 @@ package id.ac.polinema.snapp.auth;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -120,19 +121,25 @@ public class Login extends AppCompatActivity {
     private void displayAlert() {
         AlertDialog.Builder warning = new AlertDialog.Builder(this)
                 .setTitle("Are you sure?")
-                .setMessage("Linking existing account will DELETE all the temp notes. Please create new account to SAVE them")
+                .setMessage("Login to existing account will DELETE all the temp notes. Please create new account to SAVE them")
                 .setPositiveButton("Save Notes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(getApplicationContext(), Register.class));
                         finish();
                     }
-                }).setNegativeButton("Logout", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Login", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //nothing
                     }
                 });
         warning.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -182,11 +182,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             email.setVisibility(View.INVISIBLE);
             navMenu.findItem(R.id.login).setVisible(true);
             navMenu.findItem(R.id.logout).setVisible(false);
+            navMenu.findItem(R.id.profil).setVisible(false);
         } else {
             email.setText(user.getEmail());
             uname.setText(user.getDisplayName());
             navMenu.findItem(R.id.login).setVisible(false);
             navMenu.findItem(R.id.logout).setVisible(true);
+            navMenu.findItem(R.id.profil).setVisible(true);
         }
 
         FloatingActionButton fab = findViewById(R.id.addNoteFloat);

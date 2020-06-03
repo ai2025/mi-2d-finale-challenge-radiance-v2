@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
-        Query query = fStore.collection("notes").document(user.getUid()).collection("myNotes").orderBy("title", Query.Direction.DESCENDING);
+        Query query = fStore.collection("notes").document(user.getUid()).collection("myNotes").orderBy("noteDate", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Note> allNotes = new FirestoreRecyclerOptions.Builder<Note>()
                 .setQuery(query, Note.class)
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             protected void onBindViewHolder(@NonNull NoteViewHolder noteViewHolder, final int i, @NonNull final Note note) {
                 noteViewHolder.noteTitle.setText(note.getTitle());
                 noteViewHolder.noteContent.setText(note.getContent());
+                noteViewHolder.noteDateMain.setText(note.getNoteDate());
                 final int code = getRandomColor();
                 noteViewHolder.mCardView.setCardBackgroundColor(noteViewHolder.view.getResources().getColorStateList(code));
                 final String docId = noteAdapter.getSnapshots().getSnapshot(i).getId();
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Intent i = new Intent(v.getContext(), NoteDetails.class);
                         i.putExtra("title", note.getTitle());
                         i.putExtra("content", note.getContent());
+                        i.putExtra("noteDate", note.getNoteDate());
                         i.putExtra("code", code);
                         i.putExtra("noteId", docId);
                         v.getContext().startActivity(i);
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 Intent i = new Intent(v.getContext(), EditNote.class);
                                 i.putExtra("title", note.getTitle());
                                 i.putExtra("content", note.getContent());
+                                i.putExtra("noteDate", note.getNoteDate());
                                 i.putExtra("noteId", docId);
                                 startActivity(i);
                                 overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
@@ -327,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public class NoteViewHolder extends RecyclerView.ViewHolder {
-        TextView noteTitle, noteContent;
+        TextView noteTitle, noteContent, noteDateMain;
         View view;
         CardView mCardView;
 
@@ -335,6 +338,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super(itemView);
             noteTitle = itemView.findViewById(R.id.titles);
             noteContent = itemView.findViewById(R.id.content);
+            noteDateMain = itemView.findViewById(R.id.noteDateMain);
             mCardView = itemView.findViewById(R.id.noteCard);
             view = itemView;
         }

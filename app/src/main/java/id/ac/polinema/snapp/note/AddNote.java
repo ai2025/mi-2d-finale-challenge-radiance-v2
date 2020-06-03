@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +34,7 @@ import id.ac.polinema.snapp.R;
 public class AddNote extends AppCompatActivity {
     FirebaseFirestore fStore;
     EditText noteTitle, noteContent;
+    TextView noteDateAdd;
     ProgressBar progSave;
     FirebaseUser user;
 
@@ -43,10 +47,18 @@ public class AddNote extends AppCompatActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fStore = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+
         noteContent = findViewById(R.id.addNoteContent);
         noteTitle = findViewById(R.id.addNoteTitle);
+        noteDateAdd = findViewById(R.id.addNoteDate);
         progSave = findViewById(R.id.progressBar);
-        user = FirebaseAuth.getInstance().getCurrentUser();
+
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+        SimpleDateFormat sdf = new SimpleDateFormat("E, MMM dd yyyy");
+        String currentDateandTime = sdf.format(new Date());
+        noteDateAdd.setText(currentDateandTime);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,8 +67,9 @@ public class AddNote extends AppCompatActivity {
 //                Toast.makeText(AddNote.this, "Save Clicked", Toast.LENGTH_SHORT).show();
                 String nTitle = noteTitle.getText().toString();
                 String nContent = noteContent.getText().toString();
+                String nDate = noteDateAdd.getText().toString();
 
-                if (nTitle.isEmpty() || nContent.isEmpty()) {
+                if (nTitle.isEmpty() || nContent.isEmpty() || nDate.isEmpty()) {
                     Toast.makeText(AddNote.this, "Can't save! Don't save your emptiness here", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -68,6 +81,7 @@ public class AddNote extends AppCompatActivity {
                 Map<String, Object> note = new HashMap<>();
                 note.put("title", nTitle);
                 note.put("content", nContent);
+                note.put("noteDate", nDate);
 
                 docref.set(note).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

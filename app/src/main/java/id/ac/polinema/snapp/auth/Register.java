@@ -66,7 +66,8 @@ public class Register extends AppCompatActivity {
                 String pass = regPass.getText().toString();
                 String passConf = regPassConf.getText().toString();
 
-                String emailPattern = "[a-zA-Z0-9._-]+@gmail+\\.+[a-z]+";
+//                String emailPattern = "[a-zA-Z0-9._-]+@gmail+\\.+[a-z]+";
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
                 if (username.isEmpty() || pass.isEmpty() || passConf.isEmpty()) {
                     Toast.makeText(Register.this, "All Field is Required", Toast.LENGTH_SHORT).show();
@@ -79,6 +80,10 @@ public class Register extends AppCompatActivity {
                     if (!email.trim().matches(emailPattern)) {
                         regEmail.setError("Invalid email address");
                     }
+                }
+
+                if (pass.length() < 6) {
+                    regPass.setError("Shout be at least 6 characters");
                 }
 
                 if (!pass.equals(passConf)) {

@@ -70,7 +70,8 @@ public class Login extends AppCompatActivity {
                 String email = logEmail.getText().toString();
                 String pass = logPass.getText().toString();
 
-                String emailPattern = "[a-zA-Z0-9._-]+@gmail+\\.+[a-z]+";
+//                String emailPattern = "[a-zA-Z0-9._-]+@gmail+\\.+[a-z]+";
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
                 if (email.isEmpty() || pass.isEmpty()) {
                     Toast.makeText(Login.this, "All Field is Required", Toast.LENGTH_SHORT).show();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +32,7 @@ public class EditNote extends AppCompatActivity {
 
     Intent data;
     EditText editNoteTitle, editNoteContent;
+    TextView editNoteDate;
     FirebaseFirestore fStore;
     ProgressBar spinner;
     FirebaseUser user;
@@ -48,12 +52,19 @@ public class EditNote extends AppCompatActivity {
 
         editNoteContent = findViewById(R.id.editNoteContent);
         editNoteTitle = findViewById(R.id.editNoteTitle);
+        editNoteDate = findViewById(R.id.editNoteDate);
 
         String noteTitle = data.getStringExtra("title");
         String noteContent = data.getStringExtra("content");
+//        String noteDateEdit = data.getStringExtra("noteDate");
 
         editNoteTitle.setText(noteTitle);
         editNoteContent.setText(noteContent);
+
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+        SimpleDateFormat sdf = new SimpleDateFormat("E, MMM dd yyyy");
+        String currentDateandTime = sdf.format(new Date());
+        editNoteDate.setText(currentDateandTime);
 
         FloatingActionButton fab = findViewById(R.id.saveEditedNote);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +72,9 @@ public class EditNote extends AppCompatActivity {
             public void onClick(View view) {
                 String nTitle = editNoteTitle.getText().toString();
                 String nContent = editNoteContent.getText().toString();
+                String nDate = editNoteDate.getText().toString();
 
-                if (nTitle.isEmpty() || nContent.isEmpty()) {
+                if (nTitle.isEmpty() || nContent.isEmpty() || nDate.isEmpty()) {
                     Toast.makeText(EditNote.this, "Can't save! Don't save your emptiness here", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -75,6 +87,7 @@ public class EditNote extends AppCompatActivity {
                 Map<String, Object> note = new HashMap<>();
                 note.put("title", nTitle);
                 note.put("content", nContent);
+                note.put("noteDate", nDate);
 
                 docref.update(note).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

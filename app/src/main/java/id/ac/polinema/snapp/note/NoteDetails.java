@@ -30,10 +30,12 @@ public class NoteDetails extends AppCompatActivity {
 
         TextView content = findViewById(R.id.noteDetailsContent);
         TextView title = findViewById(R.id.noteDetailsTitle);
+        TextView noteDate = findViewById(R.id.noteDetailsDate);
         content.setMovementMethod(new ScrollingMovementMethod());
 
         content.setText(data.getStringExtra("content"));
         title.setText(data.getStringExtra("title"));
+        noteDate.setText(data.getStringExtra("noteDate"));
         int color = data.getIntExtra("code", 0);
         content.setBackgroundColor(getResources().getColor(color));
 
@@ -44,6 +46,7 @@ public class NoteDetails extends AppCompatActivity {
                 Intent i = new Intent(view.getContext(), EditNote.class);
                 i.putExtra("title", data.getStringExtra("title"));
                 i.putExtra("content", data.getStringExtra("content"));
+                i.putExtra("noteDate", data.getStringExtra("noteDate"));
                 i.putExtra("noteId", data.getStringExtra("noteId"));
                 startActivity(i);
             }

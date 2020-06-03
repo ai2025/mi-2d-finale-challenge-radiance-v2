@@ -27,7 +27,6 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:hint="Type title here"
-                android:textColorHint="#FFFFFF"
                 android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
 
